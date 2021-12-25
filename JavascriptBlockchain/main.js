@@ -20,7 +20,7 @@ class Blockchain {
   }
 
   createGenesisBlock() {
-    return new Block(0, "01/01/2017", "Genesis block", "0");
+    return new Block(0, "01/01/2021", "Genesis block", "0");
   }
 
   getLatestBlock() {
@@ -33,4 +33,10 @@ class Blockchain {
     this.chain.push(newBlock);
   }
 }
+
+let savjeeCoin = new Blockchain();
+savjeeCoin.addBlock(new Block(1, "10/01/2021", { amount : 4}));
+savjeeCoin.addBlock(new Block(2, "12/07/2021", { amount: 10 }));
+
+console.log(JSON.stringify(savjeeCoin, null, 4));
 
