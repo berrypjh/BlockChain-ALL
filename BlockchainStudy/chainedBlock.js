@@ -79,10 +79,11 @@ function addBlock(bodyData) {
   Blocks.push(newBlock)
 }
 
-addBlock(['transaction1'])
-addBlock(['transaction2'])
-addBlock(['transaction3'])
-addBlock(['transaction4'])
-addBlock(['transaction5'])
-
-console.log(Blocks);
+module.exports = {
+  Blocks,
+  getVersion,
+  getBlocks,
+  getLastBlock,
+  createHash,
+  nextBlock
+}
