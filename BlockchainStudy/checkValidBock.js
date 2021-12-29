@@ -37,8 +37,8 @@ function addBlock(newBlock) {
   return false;
 }
 
-const block = nextBlock(['new Transaction'])
-addBlock(block)
+// const block = nextBlock(['new Transaction'])
+// addBlock(block)
 
 module.exports = {
   addBlock
