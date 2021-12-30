@@ -2,6 +2,7 @@ const p2p_port = process.env.P2P_PORT || 6001
 
 const WebSocket = require("ws")
 const { WebSocketServer } = require("ws")
+const { getLastBlock, getBlocks } = require("./chainedBlock")
 
 function initP2PServer(test) {
   const server = new WebSocketServer({ port:test })
@@ -50,6 +51,63 @@ function connectToPeers(newPeers) {
       ws.on("error", () => { console.log("connection Failed!"); })
     }
   )
+}
+
+const MessageType = {
+  QUERY_LATEST:0,
+  QUERY_ALL:1,
+  RESPONSE_BLOCKCHAIN:2
+}
+
+function initMessageHandler(ws) {
+  ws.on("message", (data) => {
+    const message = JSON.parse(data)
+
+    switch(message.type) {
+      case MessageType.QUERY_LATEST:
+        // 내블록중 가장 최근 블록을 반환한다.
+        write(ws, responseLatestMsg());
+        break;
+      case MessageType.QUERY_ALL:
+        write(ws, responseAllChainMsg());
+        break;
+      case MessageType.RESPONSE_BLOCKCHAIN:
+        handleBlockResponse(message);
+        break;
+    }
+  })
+}
+
+function responseLatestMsg() {
+  return ({
+    "type": RESPONSE_BLOCKCHAIN,
+    "data": JSON.stringify([getLastBlock()])
+  })
+}
+
+function responseAllChainMsg() {
+  return ({
+    "type": RESPONSE_BLOCKCHAIN,
+    "data": JSON.stringify(getBlocks())
+  })
+}
+
+function handleBlockResponse() {
+  
+}
+
+function queryAllMsg() {
+  return ({
+    "type": QUERY_ALL,
+    "data": null
+  })
+}
+
+function queryLatestMsg() {
+  return ({
+    "type": QUERY_LATEST,
+    "data": null
+  })
 }
 
 module.exports = {
