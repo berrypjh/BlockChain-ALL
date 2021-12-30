@@ -4,13 +4,13 @@ const WebSocket = require("ws")
 const { WebSocketServer } = require("ws")
 const { getLastBlock, getBlocks } = require("./chainedBlock")
 
-function initP2PServer(test) {
-  const server = new WebSocketServer({ port:test })
+function initP2PServer(test_port) {
+  const server = new WebSocketServer({ port:test_port })
   server.on("connection", (ws) => { 
     console.log(ws);
     initConnection(ws); 
   })
-  console.log("Listening webSocket port : " + test);
+  console.log("Listening webSocket port : " + test_port);
 }
 
 // initP2PServer();
