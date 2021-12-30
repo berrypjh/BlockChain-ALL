@@ -74,11 +74,6 @@ function nextBlock(bodyData) {
   return new Block(header, bodyData)
 }
 
-function addBlock(bodyData) {
-  const newBlock = nextBlock(bodyData)
-  Blocks.push(newBlock)
-}
-
 module.exports = {
   Blocks,
   getVersion,
