@@ -2,7 +2,7 @@ const p2p_port = process.env.P2P_PORT || 6001
 
 const WebSocket = require("ws");
 const { WebSocketServer } = require("ws");
-const { getLastBlock, getBlocks, createHash } = require("./chainedBlock");
+const { getLastBlock, getBlocks, createHash, replaceChain } = require("./chainedBlock");
 const { addBlock } = require("./checkValidBock");
 
 function initP2PServer(test) {
@@ -17,7 +17,7 @@ function initP2PServer(test) {
 // initP2PServer();
 initP2PServer(6001);
 initP2PServer(6002);
-initP2PServer(6003); 
+initP2PServer(6003);
 
 let sockets = []
 
@@ -116,7 +116,7 @@ function handleBlockResponse(message) {
     } else if (receiveBlocks.length === 1) {  // 받은 블럭의 전체 크기가 1일 때
       broadcast(queryAllMsg());
     } else {  // 내 원장이랑 다른 원장 간의 불일치 -> 나중에 해결한다.
-      replaceChin(receiveBlocks);
+      replaceChain(receiveBlocks);
     }
   } else {
     console.log("Do nothing.");
