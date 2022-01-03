@@ -1,5 +1,5 @@
 const merkle = require("merkle");
-const { Blocks, getLastBlock, createHash, nextBlock } = require('./chainedBlock');
+const { createHash, getLastBlock, Blocks } = require('./chainedBlock');
 
 function isValidBlockStructure(block) {
   return typeof(block.header.version) === 'string'
@@ -21,11 +21,27 @@ function isValidNewBlock(newBlock, previousBlock) {
     console.log('Invalid previousHash');
     return false;
   } else if (newBlock.body.length === 0 && ('0'.repeat(64) !== newBlock.header.merkleRoot) ||
-    newBlock.body.length !== 0 && (merkle("sha256").sync(newBlock.body).root() !== newBlock.header.merkleRoot)) { // 데이터가 있을 때 없을 때
+    newBlock.body.length !== 0 && (merkle("sha256").sync(newBlock.body).root() !== newBlock.header.merkleRoot)) {
       console.log('Invalid merkleRoot');
       return false;
   }
   
+  return true;
+}
+
+function isValidChain(newBlocks) {
+  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
+    return false;
+  }
+
+  var tempBlocks = [newBlocks[0]];
+  for (var i = 0; i < newBlocks.length; i++) {    
+    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
+      tempBlocks.push(newBlocks[i]);
+    } else {
+      return false;
+    }
+  }
   return true;
 }
 
@@ -36,9 +52,6 @@ function addBlock(newBlock) {
   }
   return false;
 }
-
-const block = nextBlock(['new Transaction'])
-addBlock(block)
 
 module.exports = {
   addBlock
