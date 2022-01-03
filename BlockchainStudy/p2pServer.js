@@ -3,12 +3,12 @@ const p2p_port = process.env.P2P_PORT || 6001
 const WebSocket = require("ws");
 const { WebSocketServer } = require("ws");
 const { getLastBlock, getBlocks, createHash, replaceChain } = require("./chainedBlock");
-const { addBlock } = require("./checkValidBock");
+const { addBlock } = require("./checkValidBlock");
 
 function initP2PServer(test) {
   const server = new WebSocketServer({ port:test });
   server.on("connection", (ws) => { 
-    console.log(ws);
+    // console.log(ws);
     initConnection(ws); 
   })
   console.log("Listening webSocket port : " + test);
@@ -44,14 +44,15 @@ function broadcast(message) {
 }
 
 function connectToPeers(newPeers) {
-  console.log(newPeers);
+  // console.log(newPeers);
 
   newPeers.forEach(
 		(peer)=>{			
 			const ws = new WebSocket(peer);
-			console.log(ws);
+			// console.log(ws);
 			ws.on("open", ()=>{ 
         console.log("open"); 
+        console.log(sockets);
         initConnection(ws);
       });
 			ws.on("error", (errorType)=>{ console.log("connetion Failed!" + errorType)});

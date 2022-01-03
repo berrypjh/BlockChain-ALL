@@ -1,6 +1,6 @@
 const express = require("express");
 const { nextBlock, getBlocks, getVersion } = require("./chainedBlock");
-const { addBlock } = require("./checkValidBock");
+const { addBlock } = require("./checkValidBlock");
 const { connectToPeers, getSockets } = require("./p2pServer");
 
 const http_port = process.env.HTTP_PORT || 3001;
