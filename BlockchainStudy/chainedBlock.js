@@ -3,6 +3,9 @@ const merkle = require('merkle')
 const cryptojs = require('crypto-js')
 const random = require('random')
 
+const BLOCK_GENERATION_INTERVAL = 10  // second
+const DIFFICULTY_ADJUSTMENT_INTERVAL = 10 // in blocks
+
 class Block {
   constructor(header, body) {
     this.header = header
@@ -132,6 +135,45 @@ function findBlock(currentVersion, nextIndex, previousHash, nextTimestamp, merkl
     }
     nonce++;
   }
+}
+
+function getDifficulty(blocks) {
+  const lastBlock = blocks[blocks.length - 1];
+  if (lastBlock.header.index !== 0 && 
+    lastBlock.header.index % DIFFICULTY_ADJUSTMENT_INTERVAL === 0) {
+    return getAdjustDifficulty(lastBlock, blocks);
+  }
+
+  return lastBlock.header.difficulty;
+}
+
+function getAdjustDifficulty(lastBlock, blocks) {
+  const prevAdjustmentBlock = blocks[blocks.length - BLOCK_GENERATION_INTERVAL];
+  const elapsedTime = lastBlock.timestamp - prevAdjustmentBlock.header.timestamp;
+  const expectedTime = BLOCK_GENERATION_INTERVAL * DIFFICULTY_ADJUSTMENT_INTERVAL;
+
+  if (expectedTime / 2 > elapsedTime) {
+    return prevAdjustmentBlock.header.difficulty + 1;
+  } else if (expectedTime * 2 < elapsedTime) {
+    return prevAdjustmentBlock.header.difficulty - 1;
+  } else {
+    return prevAdjustmentBlock.header.difficulty;
+  }
+}
+
+function getCurrentTimestamp() {
+  return Math.round(Date().getTime() / 1000);
+}
+
+function isValidTimestamp(newBlock, prevBlock) {
+  if (newBlock.header.timestamp - prevBlock.header.timestamp > 60) {
+    return false;
+  }
+
+  if (newBlock.header.timestamp - getCurrentTimestamp() > 60) {
+    return false;    
+  }
+  return true;
 }
 
 module.exports = {

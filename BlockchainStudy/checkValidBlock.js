@@ -7,6 +7,8 @@ function isValidBlockStructure(block) {
     && typeof(block.header.previousHash) === 'string'
     && typeof(block.header.timestamp) === 'number'
     && typeof(block.header.merkleRoot) === 'string'
+    && typeof(block.header.difficulty) === 'number'
+    && typeof(block.header.nonce) === 'number'
     && typeof(block.body) === 'object'
 }
 
@@ -24,6 +26,12 @@ function isValidNewBlock(newBlock, previousBlock) {
     newBlock.body.length !== 0 && (merkle("sha256").sync(newBlock.body).root() !== newBlock.header.merkleRoot)) {
       console.log('Invalid merkleRoot');
       return false;
+  } else if (!isValidTimestamp(newBlock, previousBlock)) {
+    console.log("Invalid Timestamp");
+    return false;
+  } else if (!hashMatchesDifficulty(createHash(newBlock), newBlock.header.difficulty)) {
+    console.log("Invalid hash");
+    return false;
   }
   
   return true;
