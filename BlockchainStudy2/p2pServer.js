@@ -116,5 +116,6 @@ function queryLatestMsg() {
 
 module.exports = {
   connectToPeers,
-  getSockets
+  getSockets,
+  broadcast
 }

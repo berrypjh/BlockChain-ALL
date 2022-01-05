@@ -11,6 +11,8 @@ function initHttpServer() {
 
   // curl -H "Content-Type:application/json" --data "{\"data\":[ \"ws://localhost:6002\", \"ws://localhost:6003\" ]}" http://localhost:3001/addPeers
 
+  setTimeout(() => broadcast(message), 1000);
+
   app.post("/addPeers", (req, res) => {
     const data = req.body.data || []
     console.log(data);
