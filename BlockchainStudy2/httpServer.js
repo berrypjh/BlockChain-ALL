@@ -1,21 +1,21 @@
 const express = require("express")
-const { nextBlock, getBlocks, getVersion } = require("./chainedBlock")
+const { nextBlock, getBlocks, getVersion, Blocks } = require("./chainedBlock")
 const { addBlock } = require("./checkValidBock")
-const { connectToPeers, getSockets } = require("./p2pServer")
+const { connectToPeers, getSockets, broadcast } = require("./p2pServer")
 
 const http_port = process.env.HTTP_PORT || 3002
+
+setTimeout(() => broadcast(Blocks), 1000);
 
 function initHttpServer() {
   const app = express()
   app.use(express.json())
 
-  // curl -H "Content-Type:application/json" --data "{\"data\":[ \"ws://localhost:6002\", \"ws://localhost:6003\" ]}" http://localhost:3001/addPeers
-
-  setTimeout(() => broadcast(message), 1000);
+  // curl -H "Content-Type:application/json" --data "{\"data\":[ \"ws://localhost:6002\", \"ws://localhost:6003\" ]}" http://localhost:3002/addPeers
 
   app.post("/addPeers", (req, res) => {
     const data = req.body.data || []
-    console.log(data);
+    // console.log(data);
     connectToPeers(data);
     res.send(data);
   })
@@ -40,6 +40,7 @@ function initHttpServer() {
     const block = nextBlock(data)
     addBlock(block)
 
+    broadcast(Blocks);
     res.send(block)
   })
 

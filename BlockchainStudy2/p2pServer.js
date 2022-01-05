@@ -7,7 +7,7 @@ const { getLastBlock, getBlocks } = require("./chainedBlock")
 function initP2PServer(test_port) {
   const server = new WebSocketServer({ port:test_port })
   server.on("connection", (ws) => { 
-    console.log(ws);
+    // console.log(ws);
     initConnection(ws); 
   })
   console.log("Listening webSocket port : " + test_port);
@@ -30,19 +30,25 @@ function getSockets() {
 }
 
 function write(ws, message) {
+  console.log(333333333);
   ws.send(JSON.stringify(message))
 }
 
 function broadcast(message) {
+  console.log(111111);
+  console.log(sockets);
+  console.log(222222);
+
   sockets.forEach(
     (socket) => {
+      // console.log(socket);
       write(socket, message);
     }
   )
 }
 
 function connectToPeers(newPeers) {
-  console.log(newPeers);
+  // console.log(newPeers);
 
   newPeers.forEach(
 		(peer)=>{			
