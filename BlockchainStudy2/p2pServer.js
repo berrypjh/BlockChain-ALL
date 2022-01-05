@@ -30,20 +30,14 @@ function getSockets() {
 }
 
 function write(ws, message) {
-  console.log(333333333);
-  console.log(message);
+  console.log(message); // blocks 찍힘
   // ws 로 블록 전송완료 !! 클라이언트에서 처리하면 된다.
   ws.send(JSON.stringify(message))
 }
 
 function broadcast(message) {
-  console.log(111111);
-  console.log(sockets);
-  console.log(222222);
-
   sockets.forEach(
     (socket) => {
-      // console.log(socket);
       write(socket, message);
     }
   )
