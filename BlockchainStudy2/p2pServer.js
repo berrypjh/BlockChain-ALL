@@ -31,6 +31,8 @@ function getSockets() {
 
 function write(ws, message) {
   console.log(333333333);
+  console.log(message);
+  // ws 로 블록 전송완료 !! 클라이언트에서 처리하면 된다.
   ws.send(JSON.stringify(message))
 }
 
@@ -69,6 +71,7 @@ const MessageType = {
   RESPONSE_BLOCKCHAIN:2
 }
 
+// 처음 연결했을 때의 용도인가?
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data)
