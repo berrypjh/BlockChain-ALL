@@ -21,12 +21,15 @@ class Block {
     const lastHash = lastBlock.hash;
     let { difficulty } = lastBlock;
     let nonce = 0;
-
+    
+    // 아래는 난이도 조절, 선행 -비트를 통해 검증한다.
     do {
       nonce++;
       timestamp = Date.now();
+      // 난이도를 정한다.
       difficulty = Block.adjustDifficulty({ originalBlock: lastBlock, timestamp });
-      hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
+      // crypto-hash.js 파일에서 해쉬화를 한다.
+      hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);  
     } while (hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty));
 
     return new this({ timestamp, lastHash, data, difficulty, nonce, hash });
