@@ -60,6 +60,13 @@ function initHttpServer() {
     }
   })
 
+  app.post('/mineTransaction', (req, res) => {
+    const address = req.body.address;
+    const amount = req.body.amount;
+    const resp = generatenextBlockWithTransaction(address, amount);
+    res.send(resp);
+  })
+
   app.listen(http_port, () => {
     console.log("Listening Http Port : " + http_port);
   })

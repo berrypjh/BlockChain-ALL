@@ -39,7 +39,8 @@ const getTransactionId = (transaction) => {
     return CryptoJS.SHA256(txInContent + txOutContent).toString();
 }
 
-// 트랜잭션을 임의로 만드는 함수
+/////////////////////////////////////// 트랜잭션을 임의로 만드는 함수 /////////////////////////////////////// 
+
 function generateTransaction() {
   const trans = new Transaction();
   trans.id = 1;
@@ -58,12 +59,13 @@ function generateTransaction() {
 
   return trans;
 }
-// 임의 테스트
 // const newTransaction = generateTransaction();
 
 // const { txInContent, txOutContent } = getTransactionId(newTransaction);
 // console.log(txInContent);
 // console.log(txOutContent);
+
+/////////////////////////////////////// 트랜잭션을 임의로 만드는 함수 /////////////////////////////////////// 
 
 const findUnspentTxOut = (txOutId, txOutIndex, uTxOutList) => {
   return uTxOutList.find(
@@ -71,6 +73,7 @@ const findUnspentTxOut = (txOutId, txOutIndex, uTxOutList) => {
   );
 };
 
+// signature
 const signTxIn = (transaction, txInIndex, privateKey, aUnspentTxOuts) => {
   const txIn = transaction.txIns[txInIndex];
   const dataToSign = transaction.id;
@@ -116,6 +119,7 @@ const updateUnspentTxOuts = (newTransactions, unspentTxOutLists) => {
   return resultingUnspentTxOuts;
 }
 
+// 유효성 검사
 const validateTx = (tx, uTxOutList) => {
   // 트랜잭션 타입 확인
   if (!isTxStructureValid(tx)) {
@@ -198,7 +202,7 @@ const getAmountInTxIn = (txIn, uTxOutList) =>
 // 코인베이스 아웃풋의 양
 const COINBASE_AMOUNT = 50;
 
-// Coinbase transaction 유효성 검사
+// 유효성 검사 (Coinbase transaction)
 const validateCoinbaseTx = (tx, blockIndex) => {
   if (getTransactionId(tx) !== tx.id) {
     console.log("Invalid Coinbase tx ID");
@@ -232,3 +236,10 @@ const createCoinbaseTx = (address, blockIndex) => {
   tx.id = getTransactionId(tx);
   return tx;
 };
+
+module.exports = {
+  TxIn,
+  Transaction,
+  getTransactionId,
+  signTxIn
+}
