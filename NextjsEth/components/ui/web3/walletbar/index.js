@@ -1,12 +1,14 @@
+import { useWalletInfo } from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
 
-export default function WalletBar({ address, network }) {
+export default function WalletBar() {
   const { requireInstall } = useWeb3();
+  const { account, network } = useWalletInfo();
 
   return (
-    <section className="text-white bg-indigo-600">
+    <section className="text-white bg-indigo-600 rounded-lg">
       <div className="p-8">
-        <h1 className="text-2xl">Hello, {address}</h1>
+        <h1 className="text-2xl">Hello, {account.data}</h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
         </h2>
@@ -31,15 +33,15 @@ export default function WalletBar({ address, network }) {
                 </div>
               </div>
             )}
+            {requireInstall && (
+              <div className="bg-yellow-500 p-4 rounded-lg">
+                Cannot connect to network. Please install Metamask.
+              </div>
+            )}
             {network.data && (
               <div>
                 <span>Currently on </span>
                 <strong className="text-2xl">{network.data}</strong>
-              </div>
-            )}
-            {requireInstall && (
-              <div className="bg-yellow-500 p-4 rounded-lg">
-                Cannot connect to network. Please install Metamask.
               </div>
             )}
           </div>
